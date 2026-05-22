@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagevine — Websites for Local Businesses</title>
+<meta name="description" content="Pagevine builds and maintains professional websites for local businesses. Flat monthly fee, no tech headaches, live in 5 days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Figtree:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0c0c0a;
+  --surface:#141412;
+  --card:#1a1a17;
+  --border:#262620;
+  --green:#5ddb8e;
+  --green-glow:rgba(93,219,142,.12);
+  --cream:#f0ebe2;
+  --muted:#6b6b5e;
+  --text:#ddd8ce;
+  --white:#ffffff;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Figtree',sans-serif;
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;z-index:9999;
+  opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 52px;height:66px;
+  transition:background .3s,border-color .3s;
+  border-bottom:1px solid transparent;
+}
+nav.stuck{
+  background:rgba(12,12,10,.92);
+  backdrop-filter:blur(20px);
+  border-color:var(--border);
+}
+.logo{
+  font-family:'Fraunces',serif;
+  font-size:21px;font-weight:400;
+  color:var(--cream);text-decoration:none;
+  letter-spacing:-.2px;
+}
+.logo b{color:var(--green);font-weight:400}
+.nav-links{display:flex;align-items:center;gap:34px;list-style:none}
+.nav-links a{
+  font-size:13px;font-weight:400;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--cream)}
+.nav-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green);color:#0c0c0a;
+  padding:9px 20px;border-radius:100px;
+  font-size:13px;font-weight:500;
+  text-decoration:none;
+  transition:background .2s,transform .2s;
+}
+.nav-btn:hover{background:#7feaaa;transform:translateY(-1px)}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:130px 52px 100px;
+  position:relative;overflow:hidden;
+}
+/* ambient glow top right */
+.hero::before{
+  content:'';position:absolute;
+  width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(93,219,142,.06) 0%,transparent 65%);
+  top:-200px;right:-250px;pointer-events:none;
+}
+/* subtle grid lines */
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:80px 80px;
+  opacity:.25;pointer-events:none;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);
+}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green-glow);
+  border:1px solid rgba(93,219,142,.2);
+  color:var(--green);
+  font-size:12px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 14px;border-radius:100px;
+  width:fit-content;margin-bottom:36px;
+  opacity:0;animation:fadeup .6s .1s forwards;
+}
+.hero-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero h1{
+  font-family:'Fraunces',serif;
+  font-size:clamp(54px,8.5vw,112px);
+  font-weight:300;line-height:.97;
+  letter-spacing:-2px;color:var(--cream);
+  max-width:860px;
+  opacity:0;animation:fadeup .8s .2s forwards;
+}
+.hero h1 em{
+  font-style:italic;color:var(--green);
+}
+.hero-sub{
+  margin-top:30px;
+  font-size:18px;color:var(--muted);
+  max-width:500px;line-height:1.75;font-weight:300;
+  opacity:0;animation:fadeup .8s .35s forwards;
+}
+.hero-actions{
+  margin-top:48px;
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  opacity:0;animation:fadeup .8s .5s forwards;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--green);color:#0c0c0a;
+  padding:15px 32px;border-radius:100px;
+  font-size:15px;font-weight:500;
+  text-decoration:none;
+  transition:background .25s,transform .25s,box-shadow .25s;
+}
+.btn-primary svg{transition:transform .2s}
+.btn-primary:hover{
+  background:#7feaaa;transform:translateY(-2px);
+  box-shadow:0 14px 40px rgba(93,219,142,.25);
+}
+.btn-primary:hover svg{transform:translateX(3px)}
+.btn-text{
+  display:inline-flex;align-items:center;gap:7px;
+  color:var(--muted);font-size:15px;
+  text-decoration:none;transition:color .2s;
+}
+.btn-text:hover{color:var(--cream)}
+
+.hero-numbers{
+  margin-top:72px;
+  display:flex;gap:56px;
+  border-top:1px solid var(--border);
+  padding-top:40px;
+  opacity:0;animation:fadeup .8s .65s forwards;
+}
+.hnum-val{
+  font-family:'Fraunces',serif;
+  font-size:40px;font-weight:300;
+  color:var(--cream);letter-spacing:-1px;line-height:1;
+}
+.hnum-val span{color:var(--green)}
+.hnum-lbl{font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:.04em}
+
+@keyframes fadeup{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── TICKER ─── */
+.ticker{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:15px 0;overflow:hidden;
+}
+.ticker-track{
+  display:flex;white-space:nowrap;gap:0;
+  animation:tick 30s linear infinite;
+}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:0 28px;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);flex-shrink:0;
+}
+.ticker-dot{width:3px;height:3px;border-radius:50%;background:var(--green);flex-shrink:0}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── SECTIONS SHARED ─── */
+section{padding:112px 52px;position:relative}
+.s-tag{
+  font-size:11px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--green);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+}
+.s-tag::before{content:'';width:20px;height:1px;background:var(--green)}
+.s-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(36px,4.5vw,60px);
+  font-weight:300;line-height:1.07;
+  letter-spacing:-1px;color:var(--cream);
+  max-width:640px;
+}
+.s-title em{font-style:italic;color:var(--green)}
+
+/* ─── HOW IT WORKS ─── */
+.how{background:var(--surface);border-top:1px solid var(--border)}
+.how-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:start;margin-top:72px;
+}
+.how-desc{
+  font-size:17px;color:var(--muted);
+  line-height:1.8;font-weight:300;
+  max-width:420px;margin-top:20px;
+}
+.steps{display:flex;flex-direction:column}
+.step{
+  display:flex;gap:22px;
+  padding:26px 0;
+  border-bottom:1px solid var(--border);
+  opacity:0;transform:translateY(12px);
+  transition:opacity .45s,transform .45s;
+}
+.step:first-child{border-top:1px solid var(--border)}
+.step.vis{opacity:1;transform:translateY(0)}
+.step-n{
+  font-family:'Fraunces',serif;
+  font-size:13px;font-weight:300;
+  color:var(--green);min-width:24px;padding-top:2px;
+}
+.step-title{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:5px}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.65}
+
+/* ─── FEATURES ─── */
+.features{background:var(--bg)}
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin-top:64px;
+}
+.feat{
+  background:var(--bg);
+  padding:44px 36px;
+  transition:background .25s;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .4s,transform .4s,background .25s;
+}
+.feat.vis{opacity:1;transform:translateY(0)}
+.feat:hover{background:var(--surface)}
+.feat-icon{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--green-glow);
+  border:1px solid rgba(93,219,142,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;margin-bottom:20px;
+}
+.feat-title{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:9px}
+.feat-desc{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ─── PRICING ─── */
+.pricing{background:var(--surface);border-top:1px solid var(--border)}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-top:64px;
+}
+.plan{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:36px 28px;
+  position:relative;
+  transition:border-color .3s,transform .3s;
+  opacity:0;transform:translateY(16px);
+}
+.plan.vis{opacity:1;transform:translateY(0);transition:opacity .5s,transform .5s,border-color .3s}
+.plan:hover{border-color:rgba(93,219,142,.25);transform:translateY(-3px)}
+.plan.featured{border-color:var(--green)}
+.plan.featured:hover{transform:translateY(-3px)}
+.pop-badge{
+  position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  background:var(--green);color:#0c0c0a;
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 14px;border-radius:100px;white-space:nowrap;
+}
+.plan-name{
+  font-size:12px;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:16px;
+}
+.plan-price{
+  font-family:'Fraunces',serif;
+  font-size:54px;font-weight:300;
+  color:var(--cream);letter-spacing:-2px;line-height:1;
+}
+.plan-price sup{font-size:22px;vertical-align:super;line-height:0;margin-right:2px}
+.plan-price sub{font-size:16px;color:var(--muted);font-family:'Figtree',sans-serif;letter-spacing:0}
+.plan-setup{font-size:13px;color:var(--muted);margin-top:6px}
+.plan-setup strong{color:var(--text)}
+.plan-line{height:1px;background:var(--border);margin:24px 0}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:11px}
+.plan-feats li{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:14px;color:var(--muted);line-height:1.5;
+}
+.plan-feats li::before{
+  content:'✓';color:var(--green);
+  font-size:12px;font-weight:600;
+  flex-shrink:0;margin-top:1px;
+}
+.plan-cta{
+  display:block;text-align:center;margin-top:28px;
+  padding:12px;border-radius:100px;
+  font-size:14px;font-weight:500;
+  text-decoration:none;transition:all .2s;
+  border:1px solid var(--border);color:var(--cream);
+}
+.plan-cta:hover{border-color:var(--green);color:var(--green)}
+.plan-cta.primary{background:var(--green);color:#0c0c0a;border-color:var(--green)}
+.plan-cta.primary:hover{background:#7feaaa}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials{background:var(--bg);border-top:1px solid var(--border)}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-top:64px;
+}
+.testi{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:32px 26px;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .5s,transform .5s;
+}
+.testi.vis{opacity:1;transform:translateY(0)}
+.testi-stars{color:var(--green);font-size:13px;letter-spacing:2px;margin-bottom:14px}
+.testi-text{
+  font-family:'Fraunces',serif;
+  font-size:16px;font-weight:300;font-style:italic;
+  color:var(--text);line-height:1.65;margin-bottom:20px;
+}
+.testi-author{display:flex;align-items:center;gap:10px}
+.testi-av{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--green-glow);border:1px solid rgba(93,219,142,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:14px;color:var(--green);
+}
+.testi-name{font-size:13px;font-weight:500;color:var(--cream)}
+.testi-biz{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* ─── FAQ ─── */
+.faq{background:var(--surface);border-top:1px solid var(--border)}
+.faq-list{margin-top:64px;max-width:680px}
+.faq-item{
+  border-bottom:1px solid var(--border);
+  opacity:0;transform:translateY(10px);
+  transition:opacity .4s,transform .4s;
+}
+.faq-item.vis{opacity:1;transform:translateY(0)}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{
+  width:100%;background:none;border:none;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;padding:22px 0;cursor:pointer;text-align:left;
+}
+.faq-q-text{font-size:15px;color:var(--cream);font-weight:400;line-height:1.4}
+.faq-icon{
+  width:26px;height:26px;border:1px solid var(--border);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--green);font-size:16px;flex-shrink:0;
+  transition:transform .3s,border-color .3s;line-height:1;
+}
+.faq-item.open .faq-icon{transform:rotate(45deg);border-color:var(--green)}
+.faq-a{
+  font-size:14px;color:var(--muted);line-height:1.75;
+  max-height:0;overflow:hidden;
+  transition:max-height .35s ease,padding-bottom .3s;
+}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:22px}
+
+/* ─── FINAL CTA ─── */
+.cta{
+  text-align:center;padding:130px 52px;
+  background:var(--bg);border-top:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.cta::before{
+  content:'';position:absolute;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(93,219,142,.05) 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.cta .s-title{margin:0 auto 22px;text-align:center}
+.cta-sub{
+  font-size:17px;color:var(--muted);line-height:1.75;
+  max-width:460px;margin:0 auto 48px;
+}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+.cta-note{margin-top:20px;font-size:13px;color:var(--muted)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:56px 52px 36px;
+}
+.foot-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:48px;margin-bottom:48px;
+}
+.foot-logo{
+  font-family:'Fraunces',serif;font-size:20px;font-weight:400;
+  color:var(--cream);text-decoration:none;display:block;margin-bottom:14px;
+}
+.foot-logo b{color:var(--green);font-weight:400}
+.foot-tagline{font-size:14px;color:var(--muted);line-height:1.7;max-width:240px}
+.foot-col h5{
+  font-size:11px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:16px;
+}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.foot-col li{font-size:14px}
+.foot-col a{color:var(--muted);text-decoration:none;transition:color .2s}
+.foot-col a:hover{color:var(--green)}
+.foot-bottom{
+  border-top:1px solid var(--border);padding-top:28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.foot-copy{font-size:13px;color:var(--muted)}
+.foot-links{display:flex;gap:22px}
+.foot-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--cream)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:960px){
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  section{padding:80px 24px}
+  .hero{padding:110px 24px 80px}
+  .hero h1{letter-spacing:-1px}
+  .hero-numbers{gap:32px;flex-wrap:wrap}
+  .how-grid{grid-template-columns:1fr;gap:48px}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .foot-top{grid-template-columns:1fr 1fr;gap:32px}
+  .foot-bottom{flex-direction:column;text-align:center}
+  .cta{padding:90px 24px}
+  footer{padding:48px 24px 28px}
+}
+@media(max-width:600px){
+  .feat-grid{grid-template-columns:1fr}
+  .hero-numbers{gap:24px}
+  .foot-top{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">page<b>vine</b></a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="mailto:hello@pagevine.co" class="nav-btn">
+      Get Started
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">AI-powered websites for local businesses</div>
+  <h1>Your business,<br><em>found</em> online.<br>Finally.</h1>
+  <p class="hero-sub">We build, host, and manage your website every month — so you never have to think about it. Flat monthly fee. Live in 5 days.</p>
+  <div class="hero-actions">
+    <a href="mailto:hello@pagevine.co" class="btn-primary">
+      Get your site built
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="#how" class="btn-text">See how it works →</a>
+  </div>
+  <div class="hero-numbers">
+    <div>
+      <div class="hnum-val">5<span>days</span></div>
+      <div class="hnum-lbl">Average launch time</div>
+    </div>
+    <div>
+      <div class="hnum-val">$0</div>
+      <div class="hnum-lbl">Upfront on most plans</div>
+    </div>
+    <div>
+      <div class="hnum-val">24<span>/7</span></div>
+      <div class="hnum-lbl">AI chat on your site</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ticker-dot"></span>Restaurants & Cafes</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Barbershops & Salons</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Contractors & Trades</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Law & Accounting Firms</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Real Estate Agents</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Fitness Studios</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Auto Repair Shops</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Medical Practices</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Restaurants & Cafes</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Barbershops & Salons</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Contractors & Trades</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Law & Accounting Firms</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Real Estate Agents</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Fitness Studios</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Auto Repair Shops</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Medical Practices</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-grid">
+    <div>
+      <div class="s-tag">How it works</div>
+      <h2 class="s-title">Simple as a<br>phone call.<br><em>Really.</em></h2>
+      <p class="how-desc">Most agencies bury you in meetings and invoices. We cut all of that. Tell us about your business and we handle everything else — design, build, hosting, updates, all of it.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <div>
+          <div class="step-title">Tell us about your business</div>
+          <div class="step-desc">A 15-minute call or a short intake form. We learn what you do, who your customers are, and what your site needs to accomplish.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <div>
+          <div class="step-title">We build it — fast</div>
+          <div class="step-desc">Your custom website is designed and built in under a week. We handle hosting, domain setup, copy, and every technical detail.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <div>
+          <div class="step-title">You approve, we launch</div>
+          <div class="step-desc">We send a live preview link. You tell us what to tweak. Once you're happy, we go live — typically within 5 business days of signing up.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <div>
+          <div class="step-title">We manage it every month</div>
+          <div class="step-desc">Changed your hours? New photos? Just message us. Updates are handled within one business day. You never touch the site.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="s-tag">What's included</div>
+  <h2 class="s-title">Everything your site<br>needs to <em>convert.</em></h2>
+  <div class="feat-grid">
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Fast, Custom Design</div>
+      <div class="feat-desc">No templates that look like everyone else. Designed specifically for your business and your customers.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">AI Chat Widget</div>
+      <div class="feat-desc">Answers customer questions 24/7 — hours, pricing, booking, directions — even when you're closed.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📈</div>
+      <div class="feat-title">Local SEO Built In</div>
+      <div class="feat-desc">Optimized to show up when locals search for what you offer. More Google visibility, more customers.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔒</div>
+      <div class="feat-title">Hosting & Security</div>
+      <div class="feat-desc">SSL, backups, uptime monitoring — all handled. Your site stays fast, secure, and always online.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Monthly Reports</div>
+      <div class="feat-desc">Every month you get a plain-English report showing who visited, what they clicked, and how many became leads.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">✏️</div>
+      <div class="feat-title">Unlimited Updates</div>
+      <div class="feat-desc">New hours, new photos, new services — just message us. Updates done within one business day.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="s-tag">Pricing</div>
+  <h2 class="s-title">No surprises.<br>No lock-in.<br><em>Just results.</em></h2>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><sup>$</sup>99<sub>/mo</sub></div>
+      <div class="plan-setup">+ <strong>$299</strong> one-time setup</div>
+      <div class="plan-line"></div>
+      <ul class="plan-feats">
+        <li>1-page professional website</li>
+        <li>Hosting & SSL included</li>
+        <li>Mobile-optimized design</li>
+        <li>2 content updates per month</li>
+        <li>Monthly traffic report</li>
+        <li>Basic local SEO setup</li>
+      </ul>
+      <a href="mailto:hello@pagevine.co" class="plan-cta">Get started</a>
+    </div>
+    <div class="plan featured">
+      <div class="pop-badge">Most Popular</div>
+      <div class="plan-name">Standard</div>
+      <div class="plan-price"><sup>$</sup>179<sub>/mo</sub></div>
+      <div class="plan-setup">+ <strong>$399</strong> one-time setup</div>
+      <div class="plan-line"></div>
+      <ul class="plan-feats">
+        <li>Up to 5 pages</li>
+        <li>Hosting & SSL included</li>
+        <li>AI chat widget</li>
+        <li>Unlimited small updates</li>
+        <li>Monthly performance report</li>
+        <li>Full local SEO optimization</li>
+        <li>Google Business integration</li>
+      </ul>
+      <a href="mailto:hello@pagevine.co" class="plan-cta primary">Get started</a>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>$</sup>299<sub>/mo</sub></div>
+      <div class="plan-setup">+ <strong>$599</strong> one-time setup</div>
+      <div class="plan-line"></div>
+      <ul class="plan-feats">
+        <li>Unlimited pages</li>
+        <li>Hosting & SSL included</li>
+        <li>AI chat with custom training</li>
+        <li>Unlimited updates, 24h priority</li>
+        <li>Advanced monthly reports</li>
+        <li>2 SEO blog posts per month</li>
+        <li>Booking & form integrations</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <a href="mailto:hello@pagevine.co" class="plan-cta">Get started</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="s-tag">What clients say</div>
+  <h2 class="s-title">Real businesses.<br><em>Real results.</em></h2>
+  <div class="testi-grid">
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"I had zero web presence for 6 years. Pagevine had me live in 4 days. I've had three new customers find me online in the first week alone."</p>
+      <div class="testi-author">
+        <div class="testi-av">M</div>
+        <div>
+          <div class="testi-name">Marcus T.</div>
+          <div class="testi-biz">MT Auto Repair</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Other agencies wanted $5,000 upfront. Pagevine charged $299 to start and my site looks better than anything they were showing me."</p>
+      <div class="testi-author">
+        <div class="testi-av">D</div>
+        <div>
+          <div class="testi-name">Denise R.</div>
+          <div class="testi-biz">Roots Salon</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"The monthly report actually shows me what's happening. I can see people clicking 'call us' from the site. That's real ROI I can point to."</p>
+      <div class="testi-author">
+        <div class="testi-av">J</div>
+        <div>
+          <div class="testi-name">James K.</div>
+          <div class="testi-biz">Kingsley Contracting</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="s-tag">FAQ</div>
+  <h2 class="s-title">Questions<br><em>answered.</em></h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q">
+        <span class="faq-q-text">Do I own my website?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">You own your domain name — always. The website files are hosted on our infrastructure. If you ever leave, we provide a full export of your site for a one-time $350 migration fee.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">
+        <span class="faq-q-text">What if I want to cancel?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">No long-term contracts. Cancel anytime with 30 days notice. We keep it month-to-month because you should stay because it's worth it — not because you're locked in.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">
+        <span class="faq-q-text">How fast will my site go live?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Most sites are live within 5 business days. We send a preview link first — once you approve, we flip the switch and you're live.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">
+        <span class="faq-q-text">Will I need to deal with anything technical?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Not at all. You just need to own your domain — we'll walk you through that in 5 minutes. After that, everything technical is handled entirely by us.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">
+        <span class="faq-q-text">What does the AI chat widget do?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">It's a chat bubble trained on your business — hours, services, pricing, location. When customers have questions at 11pm, it answers them instantly so they don't bounce to a competitor.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="s-tag" style="justify-content:center">Get started today</div>
+  <h2 class="s-title">Ready to stop missing<br>customers <em>online?</em></h2>
+  <p class="cta-sub">Book a free 15-minute call. We'll look at your current online presence and show you exactly what we'd build.</p>
+  <div class="cta-actions">
+    <a href="mailto:hello@pagevine.co" class="btn-primary">
+      Book a free call
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="tel:+15551234567" class="btn-text">Or call us directly →</a>
+  </div>
+  <p class="cta-note">Free consultation · No commitment · Live in 5 days</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <a href="#" class="foot-logo">page<b>vine</b></a>
+      <p class="foot-tagline">Professional websites for local businesses. Flat monthly fee, no tech headaches.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="mailto:hello@pagevine.co">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#pricing">Starter Plan</a></li>
+        <li><a href="#pricing">Standard Plan</a></li>
+        <li><a href="#pricing">Pro Plan</a></li>
+        <li><a href="mailto:hello@pagevine.co">Custom</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:hello@pagevine.co">hello@pagevine.co</a></li>
+        <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span class="foot-copy">© 2026 Pagevine. All rights reserved.</span>
+    <div class="foot-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Sticky nav
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>40),{passive:true});
+
+// Scroll reveal
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const delay=+(e.target.dataset.d||0);
+      setTimeout(()=>e.target.classList.add('vis'),delay);
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.step,.feat,.plan,.testi,.faq-item').forEach((el,i)=>{
+  el.dataset.d=(i%4)*80;
+  io.observe(el);
+});
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.closest('.faq-item');
+    const open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!open)item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>
